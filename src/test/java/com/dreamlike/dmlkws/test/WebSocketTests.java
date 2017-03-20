@@ -3,9 +3,6 @@
  */
 package com.dreamlike.dmlkws.test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.Random;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,13 +71,12 @@ public class WebSocketTests {
 
 		Message message = new Message();
 		message.setUserId(userId);
-		// message.setCreateTime((int) (System.currentTimeMillis() / 1000L));
-		message.setCreateTime((int) System.currentTimeMillis());
+		message.setCreateTime((int) (System.currentTimeMillis() / 1000L));
 		message.setMsgType(0);
 		message.setMsgData(randomString);
 
 		Proto proto = new Proto();
-		proto.setLength(Proto.HEADER_LENGTH + sizeofObject(message));
+		proto.setLength(Proto.HEADER_LENGTH + JsonUtil.object2String(message).getBytes().length);
 		proto.setVersion(Proto.VERSION);
 		proto.setServiceType(ProtoServiceType.MESSAGE.getValue());
 		proto.setCrc(0);
@@ -88,29 +84,6 @@ public class WebSocketTests {
 		proto.setBody(message);
 
 		return JsonUtil.object2String(proto);
-	}
-
-	private int sizeofObject(Object object) {
-
-		int size = 0;
-
-		try {
-			ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-			ObjectOutputStream objectOutputStream;
-
-			objectOutputStream = new ObjectOutputStream(byteOutputStream);
-
-			objectOutputStream.writeObject(object);
-			objectOutputStream.flush();
-			objectOutputStream.close();
-
-			size = byteOutputStream.toByteArray().length;
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return size;
 	}
 
 	private String getRandomString(int length) {
