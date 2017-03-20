@@ -66,8 +66,8 @@ public class WebSocketTests {
 
 	private String getMockProto(int userId) {
 
-		int max = 1;
-		int min = 50;
+		int max = 25;
+		int min = 1;
 		Random random = new Random();
 		int length = random.nextInt(max) % (max - min + 1) + min;
 		String randomString = getRandomString(length);
